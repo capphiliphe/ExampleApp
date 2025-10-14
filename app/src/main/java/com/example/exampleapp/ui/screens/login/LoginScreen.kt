@@ -1,89 +1,148 @@
-package com.example.exampleapp.ui.screens.login // Asegúrate de que el paquete sea el correcto
+package com.example.exampleapp.ui.screens.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button // <-- 1. Importa el componente Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Kitchen
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.exampleapp.ui.components.PasswordTextField
 
 @Composable
 fun LoginScreen(onGo: (String) -> Unit, onGoToRegister: () -> Unit) {
-    // El estado para el campo de usuario (ya lo tenías)
-    var textState by remember { mutableStateOf(TextFieldValue("")) }
-    // El estado para la contraseña (ya lo tenías)
+    var username by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Iniciar sesión")
-
-        Spacer(Modifier.height(16.dp))
-
-        // Tarjeta para agrupar los campos de texto
-        Card(
-            // Añadimos un poco de padding dentro de la tarjeta para que no esté tan pegado
-            modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Column(
-                // Un Column dentro de la Card para organizar los elementos verticalmente
-                // con un padding interno
-                modifier = Modifier.padding(16.dp)
-            ) {
-                TextField(
-                    value = textState,
-                    onValueChange = { newTextFieldValue ->
-                        textState = newTextFieldValue
-                    },
-                    label = { Text("Usuario") } // Cambié "Label" por "Usuario"
+    // Fondo degradado suave (verdes y blancos frescos)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFE8F5E9), // verde menta claro
+                        Color(0xFFFFFFFF)  // blanco limpio
+                    )
                 )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(24.dp)
+        ) {
+            // Ícono vectorial de refrigerador (Kitchen)
+            Icon(
+                imageVector = Icons.Default.Kitchen,
+                contentDescription = "Logo refrigerador",
+                tint = Color(0xFF66BB6A), // verde suave
+                modifier = Modifier
+                    .size(96.dp)
+                    .padding(bottom = 8.dp)
+            )
 
-                Spacer(Modifier.height(16.dp))
+            // Título
+            Text(
+                text = "FreshKeeper",
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF2E7D32),
+                textAlign = TextAlign.Center
+            )
 
-                PasswordTextField(
-                    value = password,
-                    onValueChange = { password = it }
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Subtítulo
+            Text(
+                text = "Organiza tus alimentos y evita el desperdicio 🍎",
+                fontSize = 14.sp,
+                color = Color(0xFF4CAF50),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Tarjeta contenedora con campos de texto
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(24.dp)),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    TextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Usuario") },
+                        singleLine = true,
+                        shape = RoundedCornerShape(12.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color(0xFFF1F8E9),
+                            unfocusedContainerColor = Color(0xFFF1F8E9),
+                            focusedIndicatorColor = Color(0xFF81C784),
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedLabelColor = Color(0xFF388E3C),
+                            cursorColor = Color(0xFF388E3C)
+                        )
+
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    PasswordTextField(
+                        value = password,
+                        onValueChange = { password = it }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botón principal
+            Button(
+                onClick = { onGo(username.text) },
+                enabled = username.text.isNotEmpty() && password.isNotEmpty(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF81C784),
+                    disabledContainerColor = Color(0xFFBDBDBD)
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = "Iniciar sesión",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
             }
-        }
 
-        Spacer(Modifier.height(24.dp)) // Un espacio mayor antes del botón
+            Spacer(modifier = Modifier.height(8.dp))
 
-        // --- 2. AQUÍ AÑADIMOS EL BOTÓN ---
-        Button(
-            onClick = {
-                // Cuando se hace clic, llamamos a la función `onGo` que recibimos como parámetro.
-                // Le pasamos el nombre de usuario como ejemplo.
-                onGo(textState.text)
-            },
-            // Opcional: El botón solo se activa si ambos campos tienen texto.
-            enabled = textState.text.isNotEmpty() && password.isNotEmpty()
-        ) {
-            Text("Ir a Home")
-        }
-        TextButton(onClick = {
-            onGoToRegister()
-        /* Aquí necesitamos un callback para ir a registro */ }) {
-
-            Text("¿No tienes cuenta? Regístrate")
+            // Enlace a registro
+            TextButton(onClick = { onGoToRegister() }) {
+                Text(
+                    text = "¿No tienes cuenta? Regístrate",
+                    color = Color(0xFF2E7D32),
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }
